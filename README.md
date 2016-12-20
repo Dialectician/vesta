@@ -2,6 +2,9 @@
 
 > A Front end for Vesta Controller
 
+## Required Packages
+vue-resource -- To allow ajax calls.
+
 ## Build Setup
 
 ``` bash
