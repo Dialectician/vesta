@@ -37,42 +37,36 @@ export default {
       this.$http.get('/api/data/elements_v2.csv')
         .then(function (response) {
           var lines = response.body.split('\n')
-          var data = []
+          var data = {}
           var headings = lines[0].split(',').map(function (heading) {
             return heading.replace(/"/g, '')
           })
+          headings.shift()
           lines.shift()
           for (var l in lines) {
             var line = lines[l].trim()
-            console.log(line)
             var items = line.split(',')
-            var obj = {}
-            for (var i in items) {
-              var item = items[i]
-              if (item[0] === '"') {
-                item = item.replace(/"/g, '')
-              } else if (item.indexOf('.') > -1) {
-                item = parseFloat(item)
-              } else {
-                item = parseInt(item)
+            if (items.length > 5) {
+              items.shift()
+              var name = items[5].replace(/"/g, '')
+              items.splice(5, 1)
+              var obj = {}
+              for (var i in items) {
+                var item = items[i]
+                if (item[0] === '"') {
+                  item = item.replace(/"/g, '')
+                } else if (item.indexOf('.') > -1) {
+                  item = parseFloat(item)
+                } else {
+                  item = parseInt(item)
+                }
+                obj[headings[i]] = item
               }
-              obj[headings[i]] = item
+              data[name] = obj
             }
-            data.push(obj)
           }
           console.log(data)
-          /*
-          var rb = response.body
-
-          var rbSplit = []
-          var to = rb
-          var toSplit = to.split(/\r|\n/)
-          for (var i = 0; i < toSplit.length; i++) {
-            rbSplit.push({'vestaobj': toSplit[i]})
-          }
-
-          this.tempdata = rbSplit
-          */
+          this.tempdata = data
         })
         .catch(function (error) {
           console.log(error)
