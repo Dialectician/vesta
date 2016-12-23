@@ -34,7 +34,7 @@ export default {
       //
       // this.$http.get('http://192.168.1.8/cgi-bin/ctlJsonDump?head=0&start=' + secondsMinus)
   //    axios.get('http://192.168.1.8/cgi-bin/ctlJsonDump?header=1&start=1482445963')
-      this.$http.get('http://206.53.94.183/public/ctlpanel.txt')
+      this.$http.get('/api/public/ctlpanel.txt')
         .then(function (response) {
           var rb = response.body
           var rbSplit = []
