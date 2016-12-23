@@ -33,10 +33,37 @@ export default {
       // var secondsMinus = Math.round(ddd.getTime() / 1000 - 60)
       //
       // this.$http.get('http://192.168.1.8/cgi-bin/ctlJsonDump?head=0&start=' + secondsMinus)
-  //    axios.get('http://192.168.1.8/cgi-bin/ctlJsonDump?header=1&start=1482445963')
-      this.$http.get('/api/public/ctlpanel.txt')
+      // axios.get('http://192.168.1.8/cgi-bin/ctlJsonDump?header=1&start=1482445963')
+      this.$http.get('/api/data/elements_v2.csv')
         .then(function (response) {
+          var lines = response.body.split('\n')
+          var data = []
+          var headings = lines[0].split(',').map(function (heading) {
+            return heading.replace(/"/g, '')
+          })
+          lines.shift()
+          for (var l in lines) {
+            var line = lines[l].trim()
+            console.log(line)
+            var items = line.split(',')
+            var obj = {}
+            for (var i in items) {
+              var item = items[i]
+              if (item[0] === '"') {
+                item = item.replace(/"/g, '')
+              } else if (item.indexOf('.') > -1) {
+                item = parseFloat(item)
+              } else {
+                item = parseInt(item)
+              }
+              obj[headings[i]] = item
+            }
+            data.push(obj)
+          }
+          console.log(data)
+          /*
           var rb = response.body
+
           var rbSplit = []
           var to = rb
           var toSplit = to.split(/\r|\n/)
@@ -45,6 +72,7 @@ export default {
           }
 
           this.tempdata = rbSplit
+          */
         })
         .catch(function (error) {
           console.log(error)
